@@ -4,7 +4,7 @@ from peewee import (Model, CharField, TextField, ForeignKeyField, IntegerField, 
 from playhouse.pool import PooledPostgresqlExtDatabase
 
 from config import DB_CONFIG
-
+from zippy_gig.constants import AccountType
 
 db = PooledPostgresqlExtDatabase(**DB_CONFIG)
 db.commit_select = True
@@ -45,6 +45,13 @@ class Account(_Model):
         data.pop("password")
         return data
 
+    @staticmethod
+    def get_vendors():
+        return Account.select().where(Account.type == AccountType.Vendor)
+
+    # def get_clients(self):
+    #     return self.select().where(self.type == AccountType.Client)
+
 
 def init_db():
     try:
@@ -55,7 +62,9 @@ def init_db():
         print "tables dropped"
         [m.create_table() for m in [Account]]
         print "tables created"
-        account = Account(email="test@example.com", password="123", first_name="Vitalii")
+        account = Account(email="test@example.com",
+                          password="123",
+                          first_name="Vitalii")
         account.save()
     except:
         db.rollback()
