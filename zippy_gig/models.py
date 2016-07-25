@@ -1,9 +1,13 @@
 # -*- coding: utf8 -*-
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 from peewee import (Model, CharField, TextField, ForeignKeyField, IntegerField, SmallIntegerField,
                     DateTimeField, DoubleField, BooleanField, datetime as peewee_datetime)
+
 from playhouse.pool import PooledPostgresqlExtDatabase
 
-from config import DB_CONFIG
+from config import DB_CONFIG, SECRET_KEY
+from utils import get_random_string
 from zippy_gig.constants import AccountType
 
 db = PooledPostgresqlExtDatabase(**DB_CONFIG)
@@ -45,9 +49,30 @@ class Account(_Model):
         data.pop("password")
         return data
 
+    def get_profile(self):
+        profile_data = ["first_name", "last_name", "address",
+                        "phone", "alt_phone", "pay_pal"]
+        return {key: item for key, item in self._data.items() if key in profile_data}
+
     @staticmethod
     def get_vendors():
         return Account.select().where(Account.type == AccountType.Vendor)
+
+    def generate_auth_token(self, expiration=600):
+        s = Serializer(SECRET_KEY, expires_in=expiration)
+        return s.dumps({'id': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(SECRET_KEY)
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None  # valid token, but expired
+        except BadSignature:
+            return None  # invalid token
+        account = Account.get(Account.id == data['id'])
+        return account
 
     # def get_clients(self):
     #     return self.select().where(self.type == AccountType.Client)

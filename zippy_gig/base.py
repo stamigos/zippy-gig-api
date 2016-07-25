@@ -6,20 +6,15 @@ class ApiException(Exception):
 
 
 class BaseController(object):
-    def __init__(self, request, account=None):
+    def __init__(self, request):
         self.request = request
-        self.account = account
 
     def __call__(self, *args, **kwargs):
         try:
             data = self._call(*args, **kwargs)
-            return jsonify(dict(result=True,
-                                data=data,
-                                error=None))
+            return dict(result=True, data=data, error=None)
         except ApiException, e:
-            return jsonify(dict(result=False,
-                                data=None,
-                                error=e.message))
+            return dict(result=False, data=None, error=e.message)
 
     def _call(self, *args, **kwargs):
         raise NotImplementedError()
