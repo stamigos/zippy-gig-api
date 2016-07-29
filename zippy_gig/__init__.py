@@ -5,6 +5,7 @@ from redis_sessions import RedisSessionInterface
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.config.from_object('config')
+app.debug = True
 # app.session_interface = RedisSessionInterface()
 basic_auth = HTTPBasicAuth()
 
