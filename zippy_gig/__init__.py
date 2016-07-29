@@ -1,7 +1,6 @@
 from flask import Flask
 
 from httpauth import HTTPBasicAuth
-
 from redis_sessions import RedisSessionInterface
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
