@@ -1,4 +1,5 @@
 import sys, os
+import site
 sys.path.insert (0,'/var/www/zippy-gig')
 os.chdir("/var/www/zippy-gig")
 
