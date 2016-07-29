@@ -8,7 +8,7 @@ logging.basicConfig(stream=sys.stderr)
 # Install venv by `virtualenv --distribute venv`
 # Then install depedencies: `source venv/bin/active`
 # `pip install -r requirements.txt`
-activate_this = '/var/www/apache/csshat.com/csshat.com/venv/bin/activate_this.py'
+activate_this = '/home/venv/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 path = os.path.join(os.path.dirname(__file__), os.pardir)
