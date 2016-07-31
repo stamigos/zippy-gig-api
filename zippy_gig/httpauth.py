@@ -42,8 +42,8 @@ class HTTPAuth(object):
             res = f(*args, **kwargs)
             res = make_response(res)
             if res.status_code == 200:
-                # if user didn't set status code, use 401
-                res.status_code = 401
+                # if user didn't set status code, use 403
+                res.status_code = 403
             if 'WWW-Authenticate' not in res.headers.keys():
                 res.headers['WWW-Authenticate'] = self.authenticate_header()
             return res
@@ -57,6 +57,7 @@ class HTTPAuth(object):
         @wraps(f)
         def decorated(*args, **kwargs):
             auth = request.authorization
+            print 'auth: ', auth
             if auth is None and 'Authorization' in request.headers:
                 # Flask/Werkzeug do not recognize any authentication types
                 # other than Basic or Digest, so here we parse the header by

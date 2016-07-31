@@ -1,6 +1,5 @@
 from flask import g
 from zippy_gig.base import BaseController
-from flask.ext.httpauth import HTTPBasicAuth
 
 
 class GetProfileController(BaseController):

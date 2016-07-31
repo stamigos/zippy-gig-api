@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 
 from zippy_gig.client.get_vendors import GetVendorsController
 from zippy_gig.client.get_profile import GetProfileController
@@ -15,8 +16,8 @@ def get_vendors():
     return GetVendorsController(request)()
 
 
-@client.route("/profile/", methods=['GET', 'OPTIONS'])
-@crossdomain(origin='http://localhost:8000/#/signin', headers=["Authorization"])
+@client.route("/profile/", methods=['GET'])
 @basic_auth.login_required
+@cross_origin()
 def get_profile():
     return jsonify(GetProfileController(request)())

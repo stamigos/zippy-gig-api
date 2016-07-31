@@ -6,15 +6,16 @@ from zippy_gig.base import BaseController, ApiException
 from zippy_gig.models import Account
 
 
-class SignInController(BaseController):
+class GetTokenController(BaseController):
     def __init__(self, request):
-        super(SignInController, self).__init__(request)
+        super(GetTokenController, self).__init__(request)
 
     def _call(self):
         account = self._check_email()
         self._check_password(account)
         g.account = account
-        return account.email
+        token = g.account.generate_auth_token()
+        return {'token': token.decode('ascii')}
 
     def _check_email(self):
         email = self._verify_field("email")
