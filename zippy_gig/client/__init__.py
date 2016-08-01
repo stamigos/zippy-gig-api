@@ -20,7 +20,7 @@ def get_vendors():
 
 @client.route("/profile/", methods=['GET'])
 @basic_auth.login_required
-@cross_origin()
+# @cross_origin()
 def get_profile():
     return jsonify(GetProfileController(request)())
 
