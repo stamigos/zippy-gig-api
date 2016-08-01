@@ -25,6 +25,7 @@ def signup():
 
 @auth.route('/token/', methods=["POST"])
 @jsonify_result
+@cross_origin()
 def get_auth_token():
     return GetTokenController(request)()
 
