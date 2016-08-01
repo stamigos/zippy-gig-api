@@ -8,7 +8,9 @@ from redis_sessions import RedisSessionInterface
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.config.from_object('config')
 app.debug = True
-CORS(app)
+cors = CORS(app, resources={r"/": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
+# CORS(app)
 # app.session_interface = RedisSessionInterface()
 basic_auth = HTTPTokenAuth(scheme='Token')
 
