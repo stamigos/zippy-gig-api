@@ -23,7 +23,7 @@ def signup():
 #     return SignInController(request)()
 
 
-@auth.route('/token/', methods=["POST"])
+@auth.route('/token/', methods=["POST", "OPTIONS"])
 @jsonify_result
 @cross_origin(origin="*")
 def get_auth_token():
