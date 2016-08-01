@@ -6,6 +6,7 @@ from zippy_gig.auth.get_token import GetTokenController
 from zippy_gig.auth.verify_token import VerifyTokenController
 from zippy_gig.decorators import jsonify_result, crossdomain
 from zippy_gig import basic_auth
+from zippy_gig.models import Account
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
