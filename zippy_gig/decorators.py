@@ -8,6 +8,7 @@ def jsonify_result(func):
     @wraps(func)
     def wrapper(*args, **kwds):
         result = func(*args, **kwds)
+        print('result: ', result)
         return jsonify(result)
     return wrapper
 
