@@ -25,6 +25,7 @@ def get_profile():
 
 
 @client.route("/fileUpload", methods=['POST'])
+@basic_auth.login_required
 def file_upload():
     acc = Account.get(id=1)
     acc.upload_photo()
