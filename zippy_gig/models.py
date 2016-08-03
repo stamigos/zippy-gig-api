@@ -62,10 +62,10 @@ class Account(_Model):
     last_name = CharField(null=True, max_length=255)
     address = TextField(null=True)
     phone = CharField(null=True)
-    alt_phone = CharField(null=True)
+    alt_phone = CharField(null=True)  # alternative phone
     pay_pal = CharField(null=True)
     avatar = ForeignKeyField(Photo, null=True)
-    type = SmallIntegerField(null=True)  # account type
+    type = SmallIntegerField(null=True)  # account type: 1|2|3
 
     # provider's specific fields
     zip_code = CharField(null=True)
