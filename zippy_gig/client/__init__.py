@@ -9,7 +9,7 @@ from zippy_gig.models import Account
 from config import MEDIA_ROOT
 
 
-client = Blueprint('client', __name__, url_prefix='/client')
+client = Blueprint('client', __name__, url_prefix='/api/v1/client')
 
 
 @client.route("/vendors/", methods=['GET'])

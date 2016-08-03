@@ -7,7 +7,7 @@ from zippy_gig.auth.verify_token import VerifyTokenController
 from zippy_gig.decorators import jsonify_result
 from zippy_gig import basic_auth
 
-auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
 
 @auth.route("/signup/", methods=['POST'])
@@ -16,7 +16,7 @@ def signup():
     return SignUpController(request)()
 
 
-@auth.route('/token/', methods=["POST", "OPTIONS"])
+@auth.route('/token/', methods=["POST"])
 @jsonify_result
 def get_auth_token():
     return GetTokenController(request)()
