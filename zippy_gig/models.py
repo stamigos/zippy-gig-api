@@ -36,11 +36,8 @@ class Photo(_Model):
         return self.image
 
     def save_image(self, file_obj):
-        print 'file_obj: ', file_obj
         self.image = secure_filename(file_obj.filename)
-        print self.image
         full_path = os.path.join(MEDIA_ROOT, self.image)
-        print 'full+path: ', full_path
         file_obj.save(full_path)
         self.save()
 
@@ -115,10 +112,7 @@ class Account(_Model):
         account = Account.get(Account.id == data['id'])
         return account
 
-    # def get_clients(self):
-    #     return self.select().where(self.type == AccountType.Client)
     def upload_photo(self):
-        print 'request_files: ', request.files
         if 'avatar' in request.files:
             _file = request.files['avatar']
             photo = Photo.create(image=_file.filename)
@@ -153,10 +147,10 @@ def init_db():
     try:
         db.connect()
         map(lambda l: db.drop_table(l, True),
-            [Photo]
+            [Account, JobType, AccountJobType, Photo]
             )
         print "tables dropped"
-        [m.create_table() for m in [Photo]]
+        [m.create_table() for m in [Account, JobType, AccountJobType, Photo]]
         print "tables created"
         job_types = ['Websites design', 'Marketing', 'Plumbing', 'Babysitter', 'Grocery Shopping',
                      'Fast Food/conveniences delivery', 'Maid service', 'Painting', 'Yardwork', 'Home repairs',
@@ -167,13 +161,15 @@ def init_db():
                      'Marriage Officiant', 'Exterminator', 'Pool repairs/maintenance',
                      'Odd Ball Gigs (profiles can add these jobs)',
                      'Cell phone Help', 'Nursing Aids', 'Performers', 'Tutors']
-        # for jb in job_types:
-        #     with db.transaction():
-        #         JobType.create(title=jb)
-        # account = Account(email="test@example.com",
-        #                   password="123",
-        #                   first_name="Vitalii")
-        # account.save()
+        for jb in job_types:
+            with db.transaction():
+                JobType.create(title=jb)
+
+        account = Account(email="test@example.com",
+                          password="123",
+                          first_name="test",
+                          last_name="last_name")
+        account.save()
     except:
         db.rollback()
         raise
