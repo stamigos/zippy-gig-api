@@ -148,10 +148,10 @@ def init_db():
     try:
         db.connect()
         map(lambda l: db.drop_table(l, True),
-            [Account, JobType, AccountJobType, Photo]
+            [AccountJobType, Account, JobType, Photo]
             )
         print "tables dropped"
-        [m.create_table() for m in [Photo, AccountJobType, Account, JobType]]
+        [m.create_table() for m in [Photo, Account, JobType, AccountJobType]]
         print "tables created"
         job_types = ['Websites design', 'Marketing', 'Plumbing', 'Babysitter', 'Grocery Shopping',
                      'Fast Food/conveniences delivery', 'Maid service', 'Painting', 'Yardwork', 'Home repairs',
