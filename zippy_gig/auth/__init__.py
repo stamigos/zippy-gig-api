@@ -20,6 +20,7 @@ def signup():
 @auth.route('/token/', methods=["POST"])
 @validate_json
 @jsonify_result
+@cross_origin(headers=['Content-Type'])
 def get_auth_token():
     return GetTokenController(request)()
 

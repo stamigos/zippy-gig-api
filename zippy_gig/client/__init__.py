@@ -14,12 +14,14 @@ client = Blueprint('client', __name__, url_prefix='/api/v1/client')
 
 @client.route("/vendors/", methods=['GET'])
 @jsonify_result
+@cross_origin(headers=['Content-Type'])
 def get_vendors():
     return GetVendorsController(request)()
 
 
 @client.route("/profile/", methods=['GET'])
 @basic_auth.login_required
+@cross_origin(headers=['Content-Type', 'Authorization'])
 def get_profile():
     return jsonify(GetProfileController(request)())
 
