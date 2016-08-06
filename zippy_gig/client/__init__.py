@@ -13,8 +13,8 @@ client = Blueprint('client', __name__, url_prefix='/api/v1/client')
 
 
 @client.route("/vendors/", methods=['GET'])
-@jsonify_result
 @cross_origin(headers=['Content-Type'])
+@jsonify_result
 def get_vendors():
     return GetVendorsController(request)()
 
