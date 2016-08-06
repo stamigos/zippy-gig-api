@@ -18,9 +18,9 @@ def signup():
 
 
 @auth.route('/token/', methods=["POST", "OPTIONS"])
-@validate_json
+# @validate_json
+@cross_origin(headers=['Content-type'])
 @jsonify_result
-@cross_origin(headers=['Content-Type'])
 def get_auth_token():
     return GetTokenController(request)()
 
