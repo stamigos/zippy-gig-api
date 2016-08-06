@@ -27,6 +27,7 @@ class GetTokenController(BaseController):
 
     def _check_password(self, account):
         password = self._verify_field("password")
+        print password
         if account.password != sha1(password).hexdigest():
             raise ApiException("Password is incorrect")
 

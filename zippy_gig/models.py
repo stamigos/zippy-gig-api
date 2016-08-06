@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import os
+from hashlib import sha1
 from werkzeug.utils import secure_filename
 
 from itsdangerous import (TimedJSONWebSignatureSerializer
@@ -166,7 +167,7 @@ def init_db():
                 JobType.create(title=jb)
 
         account = Account(email="test@example.com",
-                          password="123",
+                          password=sha1("123").hexdigest(),
                           first_name="test",
                           last_name="last_name")
         account.save()
