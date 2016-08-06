@@ -150,7 +150,7 @@ def init_db():
             [Account, JobType, AccountJobType, Photo]
             )
         print "tables dropped"
-        [m.create_table() for m in [Account, JobType, AccountJobType, Photo]]
+        [m.create_table() for m in [Photo, Account, JobType, AccountJobType]]
         print "tables created"
         job_types = ['Websites design', 'Marketing', 'Plumbing', 'Babysitter', 'Grocery Shopping',
                      'Fast Food/conveniences delivery', 'Maid service', 'Painting', 'Yardwork', 'Home repairs',
