@@ -22,8 +22,9 @@ def get_vendors():
 @client.route("/profile/", methods=['GET'])
 @basic_auth.login_required
 @cross_origin(headers=['Content-Type', 'Authorization'])
+@jsonify_result
 def get_profile():
-    return jsonify(GetProfileController(request)())
+    return GetProfileController(request)()
 
 
 @client.route("/fileUpload", methods=['POST'])

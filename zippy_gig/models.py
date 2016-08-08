@@ -66,7 +66,7 @@ class Account(_Model):
     alt_phone = CharField(null=True)  # alternative phone
     pay_pal = CharField(null=True)
     avatar = ForeignKeyField(Photo, null=True)
-    type = SmallIntegerField(null=True)  # account type: 1|2|3
+    type = SmallIntegerField(null=True, default=3)  # account type: 1 - client | 2 - vendor | 3 - both
 
     # provider's specific fields
     zip_code = CharField(null=True)
@@ -91,7 +91,9 @@ class Account(_Model):
 
     @staticmethod
     def get_vendors():
-        return Account.select().where(Account.type == AccountType.Vendor)
+        return Account.select()\
+            .where((Account.type == AccountType.Vendor) |
+                   (Account.type == AccountType.ClientAndVendor))
 
     def generate_auth_token(self, expiration=600):
         s = Serializer(SECRET_KEY, expires_in=expiration)

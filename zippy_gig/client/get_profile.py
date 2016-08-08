@@ -7,5 +7,4 @@ class GetProfileController(BaseController):
         super(GetProfileController, self).__init__(request)
 
     def _call(self):
-        print 'acc: ', g.account
         return g.account.get_profile()

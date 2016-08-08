@@ -16,8 +16,8 @@ class SignUpController(BaseController):
         email = self._check_account(email)
         with db.transaction():
             account = Account.create(email=email,
-                                     password=hash_pswd(password),
-                                     type=self._check_account_type())
+                                     password=hash_pswd(password))
+                                     # type=self._check_account_type())
         return account
 
     def _check_account(self, email):
@@ -27,12 +27,12 @@ class SignUpController(BaseController):
         except Account.DoesNotExist:
             return email
 
-    def _check_account_type(self):
-        account_type = self._verify_field("account_type")
-        try:
-            return int(account_type)
-        except ValueError:
-            raise ApiException("Incorrect account type")
+    # def _check_account_type(self):
+    #     account_type = self._verify_field("account_type")
+    #     try:
+    #         return int(account_type)
+    #     except ValueError:
+    #         raise ApiException("Incorrect account type")
 
 
 
