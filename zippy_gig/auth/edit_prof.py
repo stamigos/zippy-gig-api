@@ -34,9 +34,8 @@ class EditProfileController(BaseController):
         return phone
             
 
-    def check_type(self, _type):
-        [str(val) for name, val in vars(AccountType).iteritems() if not name.startswith('_')]
-        if _type in [str(val) for name, val in vars(AccountType).iteritems() if not name.startswith('_')]:
+    def check_type(self, _type):    
+        if _type in [str(e.value) for e in AccountType]:
             return _type
         raise ApiException("Invalid type: %s" % (_type))
     
