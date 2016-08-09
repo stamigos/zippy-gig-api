@@ -158,6 +158,9 @@ class Gig(_Model):
     price = IntegerField(null=True)
     account = ForeignKeyField(Account, related_name="work_type_accounts")
     
+    def __repr__(self):
+        return "descr: %s" % (self.description)
+    
 
 def init_db():
     try:
