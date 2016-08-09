@@ -146,6 +146,19 @@ class AccountJobType(_Model):
     job_type = ForeignKeyField(JobType, related_name="account_job_types")
 
 
+class Gig(_Model):
+    """
+        Work Model
+    """
+    class Meta:
+        db_table = "gig"
+        
+    _type = ForeignKeyField(JobType, related_name="work_type")
+    description = TextField(null=True)
+    price = IntegerField(null=True)
+    account = ForeignKeyField(Account, related_name="work_type_accounts")
+    
+
 def init_db():
     try:
         db.connect()
