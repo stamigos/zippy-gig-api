@@ -159,8 +159,7 @@ class Gig(_Model):
     account = ForeignKeyField(Account, related_name="work_type_accounts")
     
     def get_gig(self):
-        skip_items = ["id"]
-        return {key: item for key, item in self._data.items() if key not in skip_items}
+        return {key: item for key, item in self._data.items()}
         
     
 
