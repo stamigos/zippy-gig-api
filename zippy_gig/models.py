@@ -168,7 +168,7 @@ def init_db():
     try:
         db.connect()
         map(lambda l: db.drop_table(l, True),
-            [AccountJobType, Account, JobType, Photo, Gig]
+            [Gig, AccountJobType, Account, JobType, Photo]
             )
         print "tables dropped"
         [m.create_table() for m in [Photo, Account, JobType, AccountJobType, Gig]]
