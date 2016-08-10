@@ -91,10 +91,15 @@ class Account(_Model):
         return {key: item for key, item in self._data.items() if key in profile_data}
 
     @staticmethod
-    def get_vendors():
-        return Account.select()\
+    def get_vendors(status=None):
+        _ret_val =  Account.select()\
             .where((Account.type == AccountType.Vendor.value) |
                    (Account.type == AccountType.ClientAndVendor.value))
+        if status is not None:
+            _ret_val = _ret_val.select().where(Account.status == status)
+
+        return _ret_val
+
 
     def generate_auth_token(self, expiration=600):
         s = Serializer(SECRET_KEY, expires_in=expiration)
