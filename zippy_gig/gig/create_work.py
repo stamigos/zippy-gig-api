@@ -1,9 +1,9 @@
 from zippy_gig.base import BaseController
 from zippy_gig.models import Gig
 
-class CreateNewWorkController(BaseController):
+class CreateWorkController(BaseController):
     def __init__(self, request):
-        super(CreateNewWorkController, self).__init__(request)
+        super(CreateWorkController, self).__init__(request)
         
     def _call(self):
         work = Gig(_type=self._verify_field('type'),
