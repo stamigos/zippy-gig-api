@@ -158,8 +158,10 @@ class Gig(_Model):
     price = IntegerField(null=True)
     account = ForeignKeyField(Account, related_name="work_type_accounts")
     
-    def __repr__(self):
-        return "descr: %s" % (self.description)
+    def get_gig(self):
+        skip_items = ["id"]
+        return {key: item for key, item in self._data.items() if key not in skip_items}
+        
     
 
 def init_db():
