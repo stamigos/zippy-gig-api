@@ -92,8 +92,8 @@ class Account(_Model):
     @staticmethod
     def get_vendors():
         return Account.select()\
-            .where((Account.type == AccountType.Vendor) |
-                   (Account.type == AccountType.ClientAndVendor))
+            .where((Account.type == AccountType.Vendor.value) |
+                   (Account.type == AccountType.ClientAndVendor.value))
 
     def generate_auth_token(self, expiration=600):
         s = Serializer(SECRET_KEY, expires_in=expiration)
