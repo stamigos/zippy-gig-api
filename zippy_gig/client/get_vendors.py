@@ -11,5 +11,5 @@ class GetVendorsController(BaseController):
         job_type = request.args.get('job_type')
         status =  request.args.get('status')
     
-        return [account.get_data() for account in Account.get_vendors(status)]
+        return [account.get_data() for account in Account.get_vendors(job_type=job_type ,status=status)]
         

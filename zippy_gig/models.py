@@ -91,10 +91,15 @@ class Account(_Model):
         return {key: item for key, item in self._data.items() if key in profile_data}
 
     @staticmethod
-    def get_vendors(status=None):
+    def get_vendors(job_type=None, status=None):
         _ret_val =  Account.select()\
             .where((Account.type == AccountType.Vendor.value) |
                    (Account.type == AccountType.ClientAndVendor.value))
+
+        if job_type is not None:            
+            _ret_val = _ret_val.select()\
+                .where(Account.id << [item.account.id for item in AccountJobType.select().where(AccountJobType.job_type == job_type)])
+            
         if status is not None:
             _ret_val = _ret_val.select().where(Account.status == status)
 
@@ -196,7 +201,34 @@ def init_db():
                           first_name="test",
                           last_name="last_name")
         account.save()
+
+
     except:
         db.rollback()
         raise
 
+def fill_db():
+    for i in range(1, 150):
+        email = 'test%d@example.com' % i
+        password=sha1("123").hexdigest()
+        first_name="test%d" % i
+        last_name="last_name%d" % i
+        if i % 3:
+            status = '1'
+        else:
+            status = '2'
+        account = Account(email=email, password=password, first_name=first_name, last_name=last_name, status=status)
+        account.save()
+
+    
+    for j in range(1, 38):
+        account_job_type = AccountJobType(account=Account.select().where(Account.id == j), 
+                                          job_type=JobType.select().where(JobType.id == j))
+
+        account_job_type.save()
+
+    for j in range(1, 38):
+        account_job_type = AccountJobType(account=Account.select().where(Account.id == j+41), 
+                                          job_type=JobType.select().where(JobType.id == j))
+
+        account_job_type.save()
