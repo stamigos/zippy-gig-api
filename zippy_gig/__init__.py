@@ -18,12 +18,13 @@ from zippy_gig.auth import auth
 from zippy_gig.client import client
 from zippy_gig.error import error
 from zippy_gig.gig import gig
+from zippy_gig.vendor import vendor
 
 app.register_blueprint(auth)
 app.register_blueprint(client)
 app.register_blueprint(error)
 app.register_blueprint(gig)
-
+app.register_blueprint(vendor)
 
 
 
