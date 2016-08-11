@@ -68,6 +68,7 @@ class Account(_Model):
     avatar = ForeignKeyField(Photo, null=True)
     type = SmallIntegerField(null=True, default=3)  # account type: 1 - client | 2 - vendor | 3 - both
     vendor_status = SmallIntegerField(null=True)
+    vendor_description = TextField(null=True, max_length=500)
 
     # provider's specific fields
     zip_code = CharField(null=True)
