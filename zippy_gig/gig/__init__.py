@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from zippy_gig.gig.create_work import CreateWorkController
 from zippy_gig.gig.get_work import GetWorkController
 from zippy_gig.gig.get_works import GetWorksController
+from zippy_gig.gig.delete_work import DeleteWorkController
 from zippy_gig.decorators import jsonify_result, validate_json
 
 gig = Blueprint('gig', __name__, url_prefix='/api/v1/gig')
@@ -12,7 +13,7 @@ gig = Blueprint('gig', __name__, url_prefix='/api/v1/gig')
 def create_work():
     return CreateWorkController(request)()
     
-@gig.route("/<int:id>/")
+@gig.route("/<int:id>/", methods=['GET'])
 @jsonify_result
 def get_work(id):
     return GetWorkController(request)(id)
@@ -23,3 +24,7 @@ def get_work(id):
 def get_works():
     return GetWorksController(request)()    
 
+@gig.route("/<int:id>/delete/", methods=["POST"])
+@jsonify_result
+def delete_work(id):
+    return DeleteWorkController(request)(id)
