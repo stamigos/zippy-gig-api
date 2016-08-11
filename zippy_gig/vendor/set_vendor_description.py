@@ -12,4 +12,4 @@ class SetVendorDescriptionController(BaseController):
         g.account.vendor_description = self._verify_field('vendor_description')
         g.account.save()
     
-        return g.account.get_profile()        
+        return {"vendor_description": g.account.vendor_description}        

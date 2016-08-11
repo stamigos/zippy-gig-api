@@ -9,4 +9,4 @@ class GetVendorDescriptionController(BaseController):
         super(GetVendorDescriptionController, self).__init__(request)
 
     def _call(self):
-        return g.account.vendor_description
+        return {"vendor_description": g.account.vendor_description}

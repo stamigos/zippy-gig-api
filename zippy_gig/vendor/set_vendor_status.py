@@ -12,4 +12,4 @@ class SetVendorStatusController(BaseController):
         g.account.vendor_status = self._verify_field('vendor_status')
         g.account.save()
     
-        return g.account.get_profile()        
+        return {"vendor_status": g.account.vendor_status}

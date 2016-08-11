@@ -9,4 +9,4 @@ class GetVendorStatusController(BaseController):
         super(GetVendorStatusController, self).__init__(request)
 
     def _call(self):
-        return g.account.vendor_status
+        return {"vendor_status": g.account.vendor_status}
