@@ -12,7 +12,7 @@ class BaseController(object):
 
     def __call__(self, *args, **kwargs):
         try:
-            self._verify_data()
+            # self._verify_data()
             data = self._call(*args, **kwargs)
             return dict(result=True, data=data, error=None)
         except ApiException, e:
@@ -28,9 +28,9 @@ class BaseController(object):
             raise ApiException("{field} required".format(field=field))
         return self.request.get_json()[field]
 
-    def _verify_data(self):
-        if self.request.method == "POST" and (not self.request.get_json()):
-            raise ApiException("No json data received")
+    # def _verify_data(self):
+    #     if self.request.method == "POST" and (not self.request.get_json()):
+    #         raise ApiException("No json data received")
 
 
 
