@@ -67,7 +67,7 @@ class Account(_Model):
     pay_pal = CharField(null=True)
     avatar = ForeignKeyField(Photo, null=True)
     type = SmallIntegerField(null=True, default=3)  # account type: 1 - client | 2 - vendor | 3 - both
-    status = SmallIntegerField(null=True)
+    vendor_status = SmallIntegerField(null=True)
 
     # provider's specific fields
     zip_code = CharField(null=True)
@@ -91,17 +91,19 @@ class Account(_Model):
         return {key: item for key, item in self._data.items() if key in profile_data}
 
     @staticmethod
-    def get_vendors(job_type=None, status=None):
+    def get_vendors(job_type=None, vendor_status=None):
         _ret_val =  Account.select()\
             .where((Account.type == AccountType.Vendor.value) |
                    (Account.type == AccountType.ClientAndVendor.value))
 
+        # TODO
+        # change querying. .join() ?
         if job_type is not None:            
             _ret_val = _ret_val.select()\
                 .where(Account.id << [item.account.id for item in AccountJobType.select().where(AccountJobType.job_type == job_type)])
             
-        if status is not None:
-            _ret_val = _ret_val.select().where(Account.status == status)
+        if vendor_status is not None:
+            _ret_val = _ret_val.select().where(Account.vendor_status == vendor_status)
 
         return _ret_val
 
@@ -214,10 +216,10 @@ def fill_db():
         first_name="test%d" % i
         last_name="last_name%d" % i
         if i % 3:
-            status = '1'
+            vendor_status = '1'
         else:
-            status = '2'
-        account = Account(email=email, password=password, first_name=first_name, last_name=last_name, status=status)
+            vendor_status = '2'
+        account = Account(email=email, password=password, first_name=first_name, last_name=last_name, vendor_status=vendor_status)
         account.save()
 
     

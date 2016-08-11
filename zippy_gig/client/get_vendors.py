@@ -9,7 +9,7 @@ class GetVendorsController(BaseController):
 
     def _call(self):
         job_type = request.args.get('job_type')
-        status =  request.args.get('status')
+        vendor_status =  request.args.get('vendor_status')
     
-        return [account.get_data() for account in Account.get_vendors(job_type=job_type ,status=status)]
+        return [account.get_data() for account in Account.get_vendors(job_type=job_type ,vendor_status=vendor_status)]
         
