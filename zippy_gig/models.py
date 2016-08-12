@@ -67,10 +67,10 @@ class Account(_Model):
     pay_pal = CharField(null=True)
     avatar = ForeignKeyField(Photo, null=True)
     type = SmallIntegerField(null=True, default=3)  # account type: 1 - client | 2 - vendor | 3 - both
-    vendor_status = SmallIntegerField(null=True)
-    vendor_description = TextField(null=True)
 
     # provider's specific fields
+    vendor_status = SmallIntegerField(null=True)  # 1 - in | 2 - out
+    vendor_description = TextField(null=True)
     zip_code = CharField(null=True)
 
     def __repr__(self):
@@ -97,8 +97,7 @@ class Account(_Model):
             .where((Account.type == AccountType.Vendor.value) |
                    (Account.type == AccountType.ClientAndVendor.value))
 
-        # TODO
-        # change querying. .join() ?
+        # TODO: change querying. .join() ?
         if job_type is not None:            
             _ret_val = _ret_val.select()\
                 .where(Account.id << [item.account.id for item in AccountJobType.select().where(AccountJobType.job_type == job_type)])
@@ -108,14 +107,13 @@ class Account(_Model):
 
         return _ret_val
 
-
     def generate_auth_token(self, expiration=600):
         s = Serializer(SECRET_KEY, expires_in=expiration)
         return s.dumps({'id': self.id})
 
     def get_job_types(self):
         query = JobType.select().join(AccountJobType).join(Account).where(Account.id == self.id)
-        return [job.title for job in query]
+        return [{'id': job.id, 'title': job.title} for job in query]
 
     @staticmethod
     def verify_auth_token(token):
@@ -205,10 +203,10 @@ def init_db():
                           last_name="last_name")
         account.save()
 
-
     except:
         db.rollback()
         raise
+
 
 def fill_db():
     for i in range(1, 150):
@@ -220,9 +218,12 @@ def fill_db():
             vendor_status = '1'
         else:
             vendor_status = '2'
-        account = Account(email=email, password=password, first_name=first_name, last_name=last_name, vendor_status=vendor_status)
+        account = Account(email=email,
+                          password=password,
+                          first_name=first_name,
+                          last_name=last_name,
+                          vendor_status=vendor_status)
         account.save()
-
     
     for j in range(1, 38):
         account_job_type = AccountJobType(account=Account.select().where(Account.id == j), 

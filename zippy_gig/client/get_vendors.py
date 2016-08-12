@@ -1,6 +1,5 @@
-from zippy_gig.base import BaseController
+from zippy_gig.base import BaseController, ApiException
 from zippy_gig.models import Account
-from flask import request
 
 
 class GetVendorsController(BaseController):
@@ -8,8 +7,12 @@ class GetVendorsController(BaseController):
         super(GetVendorsController, self).__init__(request)
 
     def _call(self):
-        job_type = request.args.get('job_type')
-        vendor_status =  request.args.get('vendor_status')
+        job_type = self._verify_param('job_type')
+        vendor_status = self._verify_param('status')
     
-        return [account.get_data() for account in Account.get_vendors(job_type=job_type ,vendor_status=vendor_status)]
-        
+        return [account.get_data() for account in Account.get_vendors(job_type=job_type, vendor_status=vendor_status)]
+
+    def _verify_param(self, name):
+        if not self.request.args.get(name):
+            return None
+        return self.request.args.get(name)

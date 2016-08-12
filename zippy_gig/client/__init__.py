@@ -3,6 +3,7 @@ from flask_cors import cross_origin
 
 from zippy_gig.client.get_vendors import GetVendorsController
 from zippy_gig.client.get_profile import GetProfileController
+from zippy_gig.client.get_job_types import GetJobTypesController
 from zippy_gig.decorators import jsonify_result
 from zippy_gig import basic_auth
 from zippy_gig.models import Account
@@ -17,6 +18,13 @@ client = Blueprint('client', __name__, url_prefix='/api/v1/client')
 @jsonify_result
 def get_vendors():
     return GetVendorsController(request)()
+
+
+@client.route("/job-types/", methods=['GET'])
+@cross_origin(headers=['Content-Type'])
+@jsonify_result
+def get_job_types():
+    return GetJobTypesController(request)()
 
 
 @client.route("/profile/", methods=['GET'])
