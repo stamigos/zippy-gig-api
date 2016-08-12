@@ -6,6 +6,7 @@ from zippy_gig.models import Account
 
 
 class VerifyTokenController(object):
+
     def __init__(self, token):
         self.token = token
 
@@ -15,5 +16,3 @@ class VerifyTokenController(object):
             return False
         g.account = account
         return True
-
-

@@ -5,6 +5,7 @@ from zippy_gig.base import BaseController, ApiException
 
 
 class GetVendorStatusController(BaseController):
+
     def __init__(self, request):
         super(GetVendorStatusController, self).__init__(request)
 

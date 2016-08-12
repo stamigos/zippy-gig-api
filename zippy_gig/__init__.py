@@ -25,6 +25,3 @@ app.register_blueprint(client)
 app.register_blueprint(error)
 app.register_blueprint(gig)
 app.register_blueprint(vendor)
-
-
-

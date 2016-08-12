@@ -3,6 +3,7 @@ from zippy_gig.base import BaseController
 
 
 class GetProfileController(BaseController):
+
     def __init__(self, request):
         super(GetProfileController, self).__init__(request)
 

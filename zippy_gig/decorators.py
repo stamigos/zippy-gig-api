@@ -23,4 +23,3 @@ def validate_json(f):
             return jsonify({"error": msg}), 400
         return f(*args, **kw)
     return wrapper
-

@@ -3,6 +3,7 @@ from zippy_gig.models import Gig
 
 
 class EditWorkController(BaseController):
+
     def __init__(self, request):
         super(EditWorkController, self).__init__(request)
 
