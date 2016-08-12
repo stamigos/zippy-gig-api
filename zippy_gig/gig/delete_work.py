@@ -8,10 +8,10 @@ class DeleteWorkController(BaseController):
 
     def _call(self, id):
         try:
-            Gig.get(Gig.id == id).get_gig()
+            gig = Gig.get(Gig.id == id)
+            gig.delete().where(Gig.id == id).execute()
+            
+            return {"id:": id}
         except Gig.DoesNotExist:
             raise ApiException('Work with id: %s does not exist' % id)
 
-        query = Gig.delete().where(Gig.id == id)
-        query.execute()
-        return {"id:": id}
