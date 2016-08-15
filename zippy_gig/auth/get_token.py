@@ -7,6 +7,7 @@ from zippy_gig.models import Account
 
 
 class GetTokenController(BaseController):
+
     def __init__(self, request):
         super(GetTokenController, self).__init__(request)
 
@@ -23,14 +24,10 @@ class GetTokenController(BaseController):
             account = Account.get(Account.email == email)
             return account
         except Account.DoesNotExist:
-            raise ApiException("Account {email} does not exists".format(email=email))
+            raise ApiException(
+                "Account {email} does not exists".format(email=email))
 
     def _check_password(self, account):
         password = self._verify_field("password")
         if account.password != sha1(password).hexdigest():
             raise ApiException("Password is incorrect")
-
-
-
-
-

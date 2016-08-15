@@ -37,5 +37,3 @@ def mod_profile():
 @basic_auth.verify_token
 def verify_token(token):
     return VerifyTokenController(token)()
-
-

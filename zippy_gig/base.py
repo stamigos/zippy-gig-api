@@ -7,6 +7,7 @@ class ApiException(Exception):
 
 
 class BaseController(object):
+
     def __init__(self, request):
         self.request = request
 
@@ -31,10 +32,3 @@ class BaseController(object):
     # def _verify_data(self):
     #     if self.request.method == "POST" and (not self.request.get_json()):
     #         raise ApiException("No json data received")
-
-
-
-
-
-
-

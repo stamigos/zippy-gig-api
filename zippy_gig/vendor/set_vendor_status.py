@@ -5,11 +5,12 @@ from zippy_gig.base import BaseController, ApiException
 
 
 class SetVendorStatusController(BaseController):
+
     def __init__(self, request):
         super(SetVendorStatusController, self).__init__(request)
 
-    def _call(self):       
+    def _call(self):
         g.account.vendor_status = self._verify_field('vendor_status')
         g.account.save()
-    
+
         return {"vendor_status": g.account.vendor_status}

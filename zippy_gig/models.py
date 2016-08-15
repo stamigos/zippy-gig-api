@@ -23,11 +23,13 @@ peewee_now = peewee_datetime.datetime.now
 
 
 class _Model(Model):
+
     class Meta:
         database = db
 
 
 class Photo(_Model):
+
     class Meta:
         db_table = "photos"
 
@@ -101,7 +103,7 @@ class Account(_Model):
         if job_type is not None:            
             _ret_val = _ret_val.select()\
                 .where(Account.id << [item.account.id for item in AccountJobType.select().where(AccountJobType.job_type == job_type)])
-            
+
         if vendor_status is not None:
             _ret_val = _ret_val.select().where(Account.vendor_status == vendor_status)
 
@@ -164,16 +166,15 @@ class Gig(_Model):
     """
     class Meta:
         db_table = "gig"
-        
+
     _type = ForeignKeyField(JobType, related_name="work_type")
     description = TextField(null=True)
     price = IntegerField(null=True)
     account = ForeignKeyField(Account, related_name="work_type_accounts")
-    
+
     def get_gig(self):
         return {key: item for key, item in self._data.items()}
-        
-    
+
 
 def init_db():
     try:
@@ -211,9 +212,9 @@ def init_db():
 def fill_db():
     for i in range(1, 150):
         email = 'test%d@example.com' % i
-        password=sha1("123").hexdigest()
-        first_name="test%d" % i
-        last_name="last_name%d" % i
+        password = sha1("123").hexdigest()
+        first_name = "test%d" % i
+        last_name = "last_name%d" % i
         if i % 3:
             vendor_status = '1'
         else:
@@ -226,13 +227,13 @@ def fill_db():
         account.save()
     
     for j in range(1, 38):
-        account_job_type = AccountJobType(account=Account.select().where(Account.id == j), 
+        account_job_type = AccountJobType(account=Account.select().where(Account.id == j),
                                           job_type=JobType.select().where(JobType.id == j))
 
         account_job_type.save()
 
     for j in range(1, 38):
-        account_job_type = AccountJobType(account=Account.select().where(Account.id == j+41), 
+        account_job_type = AccountJobType(account=Account.select().where(Account.id == j + 41),
                                           job_type=JobType.select().where(JobType.id == j))
 
         account_job_type.save()

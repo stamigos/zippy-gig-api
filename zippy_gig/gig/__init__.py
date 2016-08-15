@@ -26,7 +26,8 @@ def get_work(id):
 @validate_json
 @jsonify_result
 def get_works():
-    return GetWorksController(request)()    
+    return GetWorksController(request)()
+
 
 
 @gig.route("/<int:id>/delete/", methods=["POST"])

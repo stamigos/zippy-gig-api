@@ -17,6 +17,7 @@ from werkzeug.datastructures import Authorization
 
 
 class HTTPAuth(object):
+
     def __init__(self, scheme=None, realm=None):
         self.scheme = scheme
         self.realm = realm or "Authentication Required"
@@ -97,6 +98,7 @@ class HTTPAuth(object):
 
 
 class HTTPBasicAuth(HTTPAuth):
+
     def __init__(self, scheme=None, realm=None):
         super(HTTPBasicAuth, self).__init__(scheme or 'Basic', realm)
 
@@ -133,6 +135,7 @@ class HTTPBasicAuth(HTTPAuth):
 
 
 class HTTPTokenAuth(HTTPAuth):
+
     def __init__(self, scheme='Bearer', realm=None):
         super(HTTPTokenAuth, self).__init__(scheme, realm)
 

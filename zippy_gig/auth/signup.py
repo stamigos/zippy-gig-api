@@ -4,6 +4,7 @@ from zippy_gig.utils import hash_pswd
 
 
 class SignUpController(BaseController):
+
     def __init__(self, request):
         super(SignUpController, self).__init__(request)
 
@@ -17,7 +18,7 @@ class SignUpController(BaseController):
         with db.transaction():
             account = Account.create(email=email,
                                      password=hash_pswd(password))
-                                     # type=self._check_account_type())
+            # type=self._check_account_type())
         return account
 
     def _check_account(self, email):
@@ -33,9 +34,3 @@ class SignUpController(BaseController):
     #         return int(account_type)
     #     except ValueError:
     #         raise ApiException("Incorrect account type")
-
-
-
-
-
-
