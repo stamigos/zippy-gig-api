@@ -26,7 +26,7 @@ class EditProfileController(BaseController):
     def check_phone(self, phone):
         try:
             parsed_phone_number = phonenumbers.parse(phone)
-        except ServiceException, ex:
+        except ApiException, ex:
             raise ApiException('Invalid phone number: %s %s' %
                                (phone, ex.message))
 
