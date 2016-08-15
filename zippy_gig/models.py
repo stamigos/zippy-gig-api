@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from peewee import (Model, CharField, TextField, ForeignKeyField, IntegerField, SmallIntegerField,
-                    DateTimeField, DoubleField, BooleanField, datetime as peewee_datetime)
+                    DateTimeField, DoubleField, BooleanField, DecimalField, datetime as peewee_datetime)
 
 from playhouse.pool import PooledPostgresqlExtDatabase
 from flask import Markup, request
@@ -70,6 +70,8 @@ class Account(_Model):
     avatar = ForeignKeyField(Photo, null=True)
     type = SmallIntegerField(null=True, default=3)  # account type: 1 - client | 2 - vendor | 3 - both
     zip_code = CharField(null=True)
+    lng = DecimalField(null=True)
+    lat = DecimalField(null=True)
 
     # provider's specific fields
     vendor_status = SmallIntegerField(null=True)  # 1 - in | 2 - out
