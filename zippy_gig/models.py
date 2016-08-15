@@ -67,11 +67,11 @@ class Account(_Model):
     pay_pal = CharField(null=True)
     avatar = ForeignKeyField(Photo, null=True)
     type = SmallIntegerField(null=True, default=3)  # account type: 1 - client | 2 - vendor | 3 - both
+    zip_code = CharField(null=True)
 
     # provider's specific fields
     vendor_status = SmallIntegerField(null=True)  # 1 - in | 2 - out
     vendor_description = TextField(null=True)
-    zip_code = CharField(null=True)
 
     def __repr__(self):
         return "{class_name}(id={id})".format(class_name=self.__class__.__name__, id=self.id)
@@ -93,7 +93,7 @@ class Account(_Model):
 
     @staticmethod
     def get_vendors(job_type=None, vendor_status=None):
-        _ret_val =  Account.select()\
+        _ret_val = Account.select()\
             .where((Account.type == AccountType.Vendor.value) |
                    (Account.type == AccountType.ClientAndVendor.value))
 
