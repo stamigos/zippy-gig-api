@@ -96,13 +96,17 @@ class Account(_Model):
         return {key: item for key, item in self._data.items() if key in profile_data}
 
     @staticmethod
-    def get_vendors(job_type=None, vendor_status=None):
-        _ret_val = Account.select()\
-            .where((Account.type == AccountType.Vendor.value) |
-                   (Account.type == AccountType.ClientAndVendor.value))
+    def get_vendors(job_type=None, vendor_status=None, account_id=None, account_type=None):
+        condition = ((Account.type == AccountType.Vendor.value)\
+                     | (Account.type == AccountType.ClientAndVendor.value))
+
+        if account_type in {AccountType.Vendor.value, AccountType.ClientAndVendor.value}:
+            condition &= (Account.id != account_id)
+
+        _ret_val = Account.select().where(condition)
 
         # TODO: change querying. .join() ?
-        if job_type is not None:            
+        if job_type is not None:
             _ret_val = _ret_val.select()\
                 .where(Account.id << [item.account.id for item in AccountJobType.select().where(AccountJobType.job_type == job_type)])
 
@@ -219,13 +223,16 @@ def fill_db():
         last_name = "last_name%d" % i
         if i % 3:
             vendor_status = '1'
+            type = 1
         else:
             vendor_status = '2'
+            type = 1
         account = Account(email=email,
                           password=password,
                           first_name=first_name,
                           last_name=last_name,
-                          vendor_status=vendor_status)
+                          vendor_status=vendor_status,
+                          type=type)
         account.save()
     
     for j in range(1, 38):
