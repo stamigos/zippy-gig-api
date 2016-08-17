@@ -207,7 +207,8 @@ def init_db():
         account = Account(email="test@example.com",
                           password=sha1("123").hexdigest(),
                           first_name="test",
-                          last_name="last_name")
+                          last_name="last_name",
+                          zip_code="04111")
         account.save()
 
     except:
@@ -221,6 +222,7 @@ def fill_db():
         password = sha1("123").hexdigest()
         first_name = "test%d" % i
         last_name = "last_name%d" % i
+        zip_code = "04110"
         if i % 3:
             vendor_status = '1'
             type = 1
@@ -232,7 +234,8 @@ def fill_db():
                           first_name=first_name,
                           last_name=last_name,
                           vendor_status=vendor_status,
-                          type=type)
+                          type=type,
+                          zip_code=zip_code)
         account.save()
     
     for j in range(1, 38):
