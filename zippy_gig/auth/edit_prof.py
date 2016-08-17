@@ -19,7 +19,7 @@ class EditProfileController(BaseController):
         g.account.alt_phone = self.check_phone(self._verify_field('alt_phone'))
         g.account.pay_pal = self._verify_field('pay_pal')
         g.account.type = self.check_type(self._verify_field('type'))
-        g.account.zip_code = self._verify_field('zip_code')
+        g.account.set_zip_code(self._verify_field('zip_code'))
         g.account.save()
 
         return g.account.get_profile()

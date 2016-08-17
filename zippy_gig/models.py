@@ -15,6 +15,8 @@ from flask import Markup, request
 from config import DB_CONFIG, SECRET_KEY, MEDIA_ROOT, MEDIA_URL
 from zippy_gig.constants import AccountType
 
+from geopy.geocoders import Nominatim
+
 db = PooledPostgresqlExtDatabase(**DB_CONFIG)
 db.commit_select = True
 db.autorollback = True
@@ -51,6 +53,7 @@ class Photo(_Model):
         return Markup('<img src="%s" style="height: 80px;" />' % self.url())
 
 
+# to set zip_code use only set_zip_code method!
 class Account(_Model):
     """
         Provider/Client account model
@@ -142,9 +145,15 @@ class Account(_Model):
             photo.save_image(_file)
             self.avatar = photo
             self.save()
-                    
+
     def set_zip_code(self, _zip_code):
         self.zip_code = _zip_code
+
+        geo_locator = Nominatim()
+        location = geo_locator.geocode(self.zip_code)
+
+        self.lat = location.latitude
+        self.lng = location.longitude
 
 
 class JobType(_Model):
@@ -221,11 +230,12 @@ def init_db():
 
 def fill_db():
     for i in range(1, 150):
+        print i
         email = 'test%d@example.com' % i
         password = sha1("123").hexdigest()
         first_name = "test%d" % i
         last_name = "last_name%d" % i
-        zip_code = "04110"
+        zip_code = "04116"
         if i % 3:
             vendor_status = '1'
             type = 1
@@ -237,8 +247,8 @@ def fill_db():
                           first_name=first_name,
                           last_name=last_name,
                           vendor_status=vendor_status,
-                          type=type,
-                          zip_code=zip_code)
+                          type=type)
+        account.set_zip_code(zip_code)
         account.save()
     
     for j in range(1, 38):
