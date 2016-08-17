@@ -142,6 +142,9 @@ class Account(_Model):
             photo.save_image(_file)
             self.avatar = photo
             self.save()
+                    
+    def set_zip_code(self, _zip_code):
+        self.zip_code = _zip_code
 
 
 class JobType(_Model):
