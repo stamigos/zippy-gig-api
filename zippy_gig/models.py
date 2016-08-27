@@ -6,23 +6,23 @@ from werkzeug.utils import secure_filename
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from peewee import (Model, CharField, TextField, ForeignKeyField, IntegerField, SmallIntegerField,
-                    DateTimeField, DoubleField, BooleanField, DecimalField, datetime as peewee_datetime)
+                    DateTimeField, DoubleField, BooleanField, DecimalField, datetime as peewee_datetime,
+                    fn)
 
 from playhouse.pool import PooledPostgresqlExtDatabase
-from flask import Markup, request
+from flask import Markup, request, g
 
 
 from config import DB_CONFIG, SECRET_KEY, MEDIA_ROOT, MEDIA_URL
 from zippy_gig.constants import AccountType
 
 from geopy.geocoders import Nominatim
-from geopy.distance import great_circle
-import math
-from peewee import fn
 
 db = PooledPostgresqlExtDatabase(**DB_CONFIG)
 db.commit_select = True
 db.autorollback = True
+
+import zippy_gig.sql_additional
 
 peewee_now = peewee_datetime.datetime.now
 
@@ -112,39 +112,7 @@ class Account(_Model):
             condition &= (Account.id != account_id)
 
         if radius is not None:
-            login_user_account = Account.get(Account.id == account_id)
-            user_lng, user_lat = login_user_account.lng, login_user_account.lat
-
-            db.execute_sql('''
-                create or replace function distance_kilometers(lat_login_user numeric,
-                                                               lng_login_user numeric,
-                                                               lat_account numeric,
-                                                               lng_account numeric) returns float8 as
-                $$
-                declare
-                    D_EARTH integer;
-                    d_lat float8;
-                    d_lng float8;
-                    a float8;
-                    c float8;
-                    d float8;
-                begin
-                    D_EARTH := 2 * 6371;
-                    d_lat := radians(lat_account - lat_login_user);
-                    d_lng := radians(lng_account - lng_login_user);
-                    lat_account := radians(lat_account);
-                    lat_login_user := radians(lat_login_user);
-
-                    a := pow(sin(d_lat / 2), 2) + cos(lat_login_user) * cos(lat_account) * pow(sin(d_lng / 2), 2);
-                    c := atan2(sqrt(a), sqrt(1 - a));
-                    d := D_EARTH * c;
-
-                    return d;
-                end;
-                $$ language plpgsql;
-            ''')
-
-            condition &= (fn.distance_kilometers(user_lat, user_lng, Account.lat, Account.lng) <= radius)
+            condition &= (fn.distance_kilometers(g.account.lat, g.account.lng, Account.lat, Account.lng) <= radius)
 
 
         _ret_val = Account.select().where(condition)

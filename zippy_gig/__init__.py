@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_httpauth import HTTPTokenAuth
-from zippy_gig.JSONEncoder import JSONEncoder
+from zippy_gig.utils import JSONEncoder
 from httpauth import HTTPBasicAuth
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
