@@ -16,6 +16,9 @@ from config import DB_CONFIG, SECRET_KEY, MEDIA_ROOT, MEDIA_URL
 from zippy_gig.constants import AccountType
 
 from geopy.geocoders import Nominatim
+from geopy.distance import great_circle
+import math
+from peewee import fn
 
 db = PooledPostgresqlExtDatabase(**DB_CONFIG)
 db.commit_select = True
@@ -88,6 +91,7 @@ class Account(_Model):
 
     def get_data(self):
         data = dict(self._data.items())
+        print data
         data.pop("password")
         data.update({"job_types": self.get_job_types()})
         data.update({"avatar_url": self.avatar.url() if self.avatar else None})
@@ -99,12 +103,47 @@ class Account(_Model):
         return {key: item for key, item in self._data.items() if key in profile_data}
 
     @staticmethod
-    def get_vendors(job_type=None, vendor_status=None, account_id=None, account_type=None):
+    def get_vendors(job_type=None, vendor_status=None, account_id=None, account_type=None,
+                    radius=None):
         condition = ((Account.type == AccountType.Vendor.value)\
                      | (Account.type == AccountType.ClientAndVendor.value))
 
         if account_type in {AccountType.Vendor.value, AccountType.ClientAndVendor.value}:
             condition &= (Account.id != account_id)
+
+        if radius is not None:
+            login_user_account = Account.get(Account.id == account_id)
+            user_lng, user_lat = login_user_account.lng, login_user_account.lat
+
+            condition &= (
+                (6371 * 2 *
+                 fn.atan2(fn.sqrt(fn.pow(fn.sin(fn.radians(Account.lat - user_lat) / 2), 2) +
+                                  fn.cos(fn.radians(user_lat)) * fn.cos(fn.radians(Account.lat)) *
+                                  fn.pow(fn.sin(fn.radians(Account.lng - user_lng) / 2), 2)),
+                          fn.sqrt(1 - fn.pow(fn.sin(fn.radians(Account.lat - user_lat) / 2), 2) +
+                                  fn.cos(fn.radians(user_lat)) * fn.cos(fn.radians(Account.lat)) *
+                                  fn.pow(fn.sin(fn.radians(Account.lng - user_lng) / 2), 2))))
+                <= radius)
+            '''
+
+            COUNT DISTANCE BETWEEN TWO POINTS
+
+            --user_lat  -> lat login user
+            --user_lat1 -> lat current user
+
+            # dlat = math.radians(user_lat1 - user_lat)
+            # dlng = math.radians(user_lng1 - user_lng)
+            # user_lat = math.radians(user_lat)
+            # user_lat1 = math.radians(user_lat1)
+
+            # a = math.pow(math.sin(dlat / 2), 2) + math.cos(user_lat) * math.cos(user_lat1) *
+            # math.pow(math.sin(dlng / 2), 2)
+
+            # c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+            # d = 6371 * c
+            # print 'distance: ', d
+            '''
 
         _ret_val = Account.select().where(condition)
 
@@ -154,6 +193,8 @@ class Account(_Model):
 
         self.lat = location.latitude
         self.lng = location.longitude
+
+        del geo_locator
 
 
 class JobType(_Model):
@@ -220,7 +261,8 @@ def init_db():
                           password=sha1("123").hexdigest(),
                           first_name="test",
                           last_name="last_name",
-                          zip_code="04111")
+                          )
+        account.set_zip_code("04116")
         account.save()
 
     except:
@@ -229,19 +271,22 @@ def init_db():
 
 
 def fill_db():
-    for i in range(1, 150):
+    zip_codes = ['01135', '50055', '01032']
+
+    for i in range(1, 4):
         print i
         email = 'test%d@example.com' % i
         password = sha1("123").hexdigest()
         first_name = "test%d" % i
         last_name = "last_name%d" % i
-        zip_code = "04116"
+
+        zip_code = zip_codes[i-1]
+
         if i % 3:
             vendor_status = '1'
-            type = 1
         else:
             vendor_status = '2'
-            type = 1
+        type = 2
         account = Account(email=email,
                           password=password,
                           first_name=first_name,
@@ -250,15 +295,10 @@ def fill_db():
                           type=type)
         account.set_zip_code(zip_code)
         account.save()
-    
-    for j in range(1, 38):
+
+    for j in range(1, 5):
         account_job_type = AccountJobType(account=Account.select().where(Account.id == j),
                                           job_type=JobType.select().where(JobType.id == j))
 
         account_job_type.save()
 
-    for j in range(1, 38):
-        account_job_type = AccountJobType(account=Account.select().where(Account.id == j + 41),
-                                          job_type=JobType.select().where(JobType.id == j))
-
-        account_job_type.save()
