@@ -115,35 +115,37 @@ class Account(_Model):
             login_user_account = Account.get(Account.id == account_id)
             user_lng, user_lat = login_user_account.lng, login_user_account.lat
 
-            condition &= (
-                (6371 * 2 *
-                 fn.atan2(fn.sqrt(fn.pow(fn.sin(fn.radians(Account.lat - user_lat) / 2), 2) +
-                                  fn.cos(fn.radians(user_lat)) * fn.cos(fn.radians(Account.lat)) *
-                                  fn.pow(fn.sin(fn.radians(Account.lng - user_lng) / 2), 2)),
-                          fn.sqrt(1 - fn.pow(fn.sin(fn.radians(Account.lat - user_lat) / 2), 2) +
-                                  fn.cos(fn.radians(user_lat)) * fn.cos(fn.radians(Account.lat)) *
-                                  fn.pow(fn.sin(fn.radians(Account.lng - user_lng) / 2), 2))))
-                <= radius)
-            '''
+            db.execute_sql('''
+                create or replace function distance_kilometers(lat_login_user numeric,
+                                                               lng_login_user numeric,
+                                                               lat_account numeric,
+                                                               lng_account numeric) returns float8 as
+                $$
+                declare
+                    D_EARTH integer;
+                    d_lat float8;
+                    d_lng float8;
+                    a float8;
+                    c float8;
+                    d float8;
+                begin
+                    D_EARTH := 2 * 6371;
+                    d_lat := radians(lat_account - lat_login_user);
+                    d_lng := radians(lng_account - lng_login_user);
+                    lat_account := radians(lat_account);
+                    lat_login_user := radians(lat_login_user);
 
-            COUNT DISTANCE BETWEEN TWO POINTS
+                    a := pow(sin(d_lat / 2), 2) + cos(lat_login_user) * cos(lat_account) * pow(sin(d_lng / 2), 2);
+                    c := atan2(sqrt(a), sqrt(1 - a));
+                    d := D_EARTH * c;
 
-            --user_lat  -> lat login user
-            --user_lat1 -> lat current user
+                    return d;
+                end;
+                $$ language plpgsql;
+            ''')
 
-            # dlat = math.radians(user_lat1 - user_lat)
-            # dlng = math.radians(user_lng1 - user_lng)
-            # user_lat = math.radians(user_lat)
-            # user_lat1 = math.radians(user_lat1)
+            condition &= (fn.distance_kilometers(user_lat, user_lng, Account.lat, Account.lng) <= radius)
 
-            # a = math.pow(math.sin(dlat / 2), 2) + math.cos(user_lat) * math.cos(user_lat1) *
-            # math.pow(math.sin(dlng / 2), 2)
-
-            # c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-            # d = 6371 * c
-            # print 'distance: ', d
-            '''
 
         _ret_val = Account.select().where(condition)
 
