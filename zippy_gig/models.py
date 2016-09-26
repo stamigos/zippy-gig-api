@@ -66,6 +66,7 @@ class Account(_Model):
 
     email = CharField(unique=True, max_length=320)
     password = CharField()
+    is_active = BooleanField(default=True)
     created = DateTimeField(default=peewee_now)
     first_name = CharField(null=True, max_length=255)
     last_name = CharField(null=True, max_length=255)

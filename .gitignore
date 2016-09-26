@@ -2,4 +2,4 @@
 tests/*
 .idea/*
 install_db.py
-
+media/*
