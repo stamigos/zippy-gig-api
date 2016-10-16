@@ -76,7 +76,7 @@ class Account(_Model):
     pay_pal = CharField(null=True)
     avatar = ForeignKeyField(Photo, null=True)
     type = SmallIntegerField(null=True, default=3)  # account type: 1 - client | 2 - vendor | 3 - both
-    zip_code = CharField(null=False)
+    zip_code = CharField(null=True)
     lng = DecimalField(null=True)
     lat = DecimalField(null=True)
 
