@@ -13,6 +13,7 @@ auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
 @auth.route("/signup/", methods=['POST'])
 @validate_json
+@cross_origin(headers=['Content-type'])
 @jsonify_result
 def signup():
     return SignUpController(request)()
