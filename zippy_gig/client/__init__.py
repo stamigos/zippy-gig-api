@@ -15,10 +15,10 @@ client = Blueprint('client', __name__, url_prefix='/api/v1/client')
 
 @client.route("/vendors/", methods=['GET'])
 @cross_origin(headers=['Content-Type'])
-@jsonify_result
 @basic_auth.login_required
+# @jsonify_result
 def get_vendors():
-    return GetVendorsController(request)()
+    return jsonify(GetVendorsController(request)())
 
 
 @client.route("/job-types/", methods=['GET'])
