@@ -19,7 +19,8 @@ admin.add_view(AccountAdmin(Account))
 # app.config['CORS_HEADERS'] = 'Content-Type'
 # CORS(app)
 # app.session_interface = RedisSessionInterface()
-token_auth = HTTPTokenAuth(scheme='Token')
+token_auth = HTTPBasicAuth(scheme="Token")
+# token_auth = HTTPTokenAuth(scheme='Token')
 
 from zippy_gig.auth import auth
 from zippy_gig.client import client

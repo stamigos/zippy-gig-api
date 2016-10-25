@@ -11,6 +11,7 @@ class VerifyTokenController(object):
         self.token = token
 
     def __call__(self):
+        print 'token:', self.token
         account = Account.verify_auth_token(self.token)
         if not account:
             return False

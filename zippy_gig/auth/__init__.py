@@ -35,6 +35,7 @@ def mod_profile():
     return EditProfileController(request)()
 
 
-@token_auth.verify_token
-def verify_token(token):
-    return VerifyTokenController(token)()
+@token_auth.verify_password
+def verify_password(username_or_token, password=None):
+    print('username or token:', username_or_token)
+    return VerifyTokenController(username_or_token)()

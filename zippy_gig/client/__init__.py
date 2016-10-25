@@ -23,9 +23,10 @@ def get_vendors():
 
 @client.route("/job-types/", methods=['GET'])
 @cross_origin(headers=['Content-Type'])
-@jsonify_result
+@token_auth.login_required
+# @jsonify_result
 def get_job_types():
-    return GetJobTypesController(request)()
+    return jsonify(GetJobTypesController(request)())
 
 
 @client.route("/profile/", methods=['GET'])
