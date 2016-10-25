@@ -6,7 +6,7 @@ from zippy_gig.auth.get_token import GetTokenController
 from zippy_gig.auth.verify_token import VerifyTokenController
 from zippy_gig.decorators import jsonify_result, validate_json
 from zippy_gig.auth.edit_prof import EditProfileController
-from zippy_gig import basic_auth
+from zippy_gig import token_auth
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
@@ -28,13 +28,13 @@ def get_auth_token():
 
 
 @auth.route("/profile/", methods=['POST'])
-@basic_auth.login_required
+@token_auth.login_required
 @validate_json
 @jsonify_result
 def mod_profile():
     return EditProfileController(request)()
 
 
-@basic_auth.verify_token
+@token_auth.verify_token
 def verify_token(token):
     return VerifyTokenController(token)()
