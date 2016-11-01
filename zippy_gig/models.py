@@ -101,7 +101,9 @@ class Account(_Model):
     def get_profile(self):
         profile_data = ["first_name", "last_name", "address",
                         "phone", "alt_phone", "pay_pal", "type", "zip_code"]
-        return {key: item for key, item in self._data.items() if key in profile_data}
+        data = {key: item for key, item in self._data.items() if key in profile_data}
+        data.update({"avatar_url": self.avatar.url() if self.avatar else None})
+        return data
 
     @staticmethod
     def get_vendors(job_type=None, vendor_status=None, account_id=None, account_type=None,
