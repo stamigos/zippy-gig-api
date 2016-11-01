@@ -101,7 +101,10 @@ class Account(_Model):
     def get_profile(self):
         profile_data = ["first_name", "last_name", "address",
                         "phone", "alt_phone", "pay_pal", "type", "zip_code"]
-        return {key: item for key, item in self._data.items() if key in profile_data}
+        data = {key: item for key, item in self._data.items() if key in profile_data}
+        data.update({"avatar_url": self.avatar.url() if self.avatar else None})
+        data.update({"job_types": self.get_job_types()})
+        return data
 
     @staticmethod
     def get_vendors(job_type=None, vendor_status=None, account_id=None, account_type=None,
@@ -149,12 +152,10 @@ class Account(_Model):
         return account
 
     def upload_photo(self):
-        print 'request files:', request.files
         if 'avatar' in request.files:
             _file = request.files['avatar']
             photo = Photo.create(image=_file.filename)
             photo.save_image(_file)
-            print("photo_image:", photo.image)
             self.avatar = photo
             self.save()
             return os.path.join(MEDIA_URL, photo.image)
