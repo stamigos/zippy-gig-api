@@ -100,7 +100,7 @@ class Account(_Model):
 
     def get_profile(self):
         profile_data = ["first_name", "last_name", "address",
-                        "phone", "alt_phone", "pay_pal"]
+                        "phone", "alt_phone", "pay_pal", "type", "zip_code"]
         return {key: item for key, item in self._data.items() if key in profile_data}
 
     @staticmethod
