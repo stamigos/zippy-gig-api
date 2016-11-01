@@ -29,6 +29,7 @@ def get_auth_token():
 
 @auth.route("/profile/", methods=['POST'])
 @token_auth.login_required
+@cross_origin(headers=['Content-Type', 'Authorization'])
 @validate_json
 @jsonify_result
 def mod_profile():
@@ -37,5 +38,4 @@ def mod_profile():
 
 @token_auth.verify_password
 def verify_password(username_or_token, password=None):
-    print('username or token:', username_or_token)
     return VerifyTokenController(username_or_token)()
