@@ -155,6 +155,8 @@ class Account(_Model):
             photo.save_image(_file)
             self.avatar = photo
             self.save()
+            return os.path.join(MEDIA_URL, photo.image)
+        return None
 
     def set_zip_code(self, _zip_code):
         self.zip_code = _zip_code

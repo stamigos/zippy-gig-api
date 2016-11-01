@@ -41,9 +41,8 @@ def get_profile():
 @token_auth.login_required
 @cross_origin(headers=['Content-Type', 'Authorization'])
 def file_upload():
-    acc = g.account
-    acc.upload_photo()
-    return jsonify(dict(result=True, data={"url": acc.avatar.url()}, error=None))
+    url = g.account.upload_photo()
+    return jsonify(dict(result=True, data={"url": url}, error=None))
 
 
 @client.route('/media/<name>', methods=['GET'])
