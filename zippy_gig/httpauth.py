@@ -58,7 +58,6 @@ class HTTPAuth(object):
         @wraps(f)
         def decorated(*args, **kwargs):
             auth = request.authorization
-            print 'auth: ', 'Authorization' in request.headers
             if auth is None and 'Authorization' in request.headers:
                 # Flask/Werkzeug do not recognize any authentication types
                 # other than Basic or Digest, so here we parse the header by
@@ -114,7 +113,6 @@ class HTTPBasicAuth(HTTPAuth):
         return f
 
     def authenticate(self, auth, stored_password):
-        print "auth yobana:", auth
         if auth:
             username = auth['token']
             client_password = auth.password
