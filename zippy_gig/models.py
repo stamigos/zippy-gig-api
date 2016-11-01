@@ -166,9 +166,12 @@ class Account(_Model):
 
         geo_locator = Nominatim()
         location = geo_locator.geocode(self.zip_code)
-
-        self.lat = location.latitude
-        self.lng = location.longitude
+        if location:
+            self.lat = location.latitude
+            self.lng = location.longitude
+        else:
+            self.lat = None
+            self.lng = None
 
         del geo_locator
 
