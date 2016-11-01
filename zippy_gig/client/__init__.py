@@ -37,8 +37,9 @@ def get_profile():
     return GetProfileController(request)()
 
 
-@client.route("/fileUpload", methods=['POST'])
+@client.route("/avatar/", methods=['POST'])
 @token_auth.login_required
+@cross_origin(headers=['Content-Type', 'Authorization'])
 def file_upload():
     acc = Account.get(id=1)
     acc.upload_photo()
